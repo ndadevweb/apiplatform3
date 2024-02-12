@@ -1,0 +1,24 @@
+api_platform:
+    formats:
+        jsonld: [ 'application/ld+json' ]
+        json: [ 'application/json' ]
+        # html doit etre desactive en prod
+        html: [ 'text/html' ]
+        jsonhal: [ 'application/hal+json' ]
+    swagger:
+        api_keys:
+        # overridden in OpenApiFatoryDecorator
+            access_token:
+                name: Authorization
+                type: header
+
+    # pour la prod les options ci-dessous doivent etre renseignees
+    # enable_docs: false
+    # enable_entrypoint: false
+    # enable_swagger: false
+    # enable_swagger_ui: false
+    # enable_swagger_ui: '%env(bool:ENABLE_API_DOCS)%'
+
+# when@prod:
+#     api_platform:
+#         enable_swagger_ui: false
