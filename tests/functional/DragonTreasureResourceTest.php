@@ -2,23 +2,22 @@
 
 namespace App\Tests\Functional;
 
-use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use App\Factory\DragonTreasureFactory;
 use App\Factory\UserFactory;
+use App\Factory\ApiTokensFactory;
+use App\Tests\ApiTestCase as FunctionalApiTestCase;
 use Zenstruck\Browser\HttpOptions;
 use Zenstruck\Browser\Json;
-use Zenstruck\Browser\Test\HasBrowser;
 use Zenstruck\Foundry\Test\ResetDatabase;
+use App\Entity\ApiTokens;
 
-class DragonTreasureResourceTest extends ApiTestCase
+
+class DragonTreasureResourceTest extends FunctionalApiTestCase
 {
-    use HasBrowser;
     use ResetDatabase;
-
     public function testGetCollectionOfTreasures(): void
     {
         DragonTreasureFactory::createMany(5);
-
         $json = $this->browser()
             ->get('/api/treasures')
             ->assertJson()
@@ -26,7 +25,6 @@ class DragonTreasureResourceTest extends ApiTestCase
             ->assertJsonMatches('length("hydra:member")', 5)
             ->json()
         ;
-
         $this->assertSame(array_keys($json->decoded()['hydra:member'][0]), [
             '@id',
             '@type',
@@ -39,11 +37,9 @@ class DragonTreasureResourceTest extends ApiTestCase
             'plunderedAtAgo',
         ]);
     }
-
     public function testPostToCreateTreasure(): void
     {
         $user = UserFactory::createOne();
-
         $this->browser()
             ->actingAs($user)
             ->post('/api/treasures', [
@@ -58,8 +54,37 @@ class DragonTreasureResourceTest extends ApiTestCase
                 'owner' => '/api/users/'.$user->getId(),
             ]))
             ->assertStatus(201)
-            ->dump()
             ->assertJsonMatches('name', 'A shiny thing')
+        ;
+    }
+    public function testPostToCreateTreasureWithApiKey(): void
+    {
+        $token = ApiTokensFactory::createOne([
+            'scopes' => [ApiTokens::SCOPE_TREASURE_CREATE]
+        ]);
+        $this->browser()
+            ->post('/api/treasures', [
+                'json' => [],
+                'headers' => [
+                    'Authorization' => 'Bearer '.$token->getToken()
+                ]
+            ])
+            ->assertStatus(422)
+        ;
+    }
+    public function testPostToCreateTreasureDeniedWithoutScope(): void
+    {
+        $token = ApiTokensFactory::createOne([
+            'scopes' => [ApiTokens::SCOPE_TREASURE_EDIT]
+        ]);
+        $this->browser()
+            ->post('/api/treasures', [
+                'json' => [],
+                'headers' => [
+                    'Authorization' => 'Bearer '.$token->getToken()
+                ]
+            ])
+            ->assertStatus(403)
         ;
     }
 }
