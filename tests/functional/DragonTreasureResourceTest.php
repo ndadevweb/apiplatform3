@@ -2,14 +2,15 @@
 
 namespace App\Tests\Functional;
 
+use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use App\Factory\DragonTreasureFactory;
 use App\Factory\UserFactory;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Zenstruck\Browser\HttpOptions;
 use Zenstruck\Browser\Json;
 use Zenstruck\Browser\Test\HasBrowser;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
-class DragonTreasureResourceTest extends KernelTestCase
+class DragonTreasureResourceTest extends ApiTestCase
 {
     use HasBrowser;
     use ResetDatabase;
@@ -49,15 +50,13 @@ class DragonTreasureResourceTest extends KernelTestCase
                 'json' => [],
             ])
             ->assertStatus(422)
-            ->post('/api/treasures', [
-                'json' => [
-                    'name' => 'A shiny thing',
-                    'description' => 'It sparkles when I wave it in the air.',
-                    'value' => 1000,
-                    'coolFactor' => 5,
-                    'owner' => '/api/users/'.$user->getId(),
-                ],
-            ])
+            ->post('/api/treasures', HttpOptions::json([
+                'name' => 'A shiny thing',
+                'description' => 'It sparkles when I wave it in the air.',
+                'value' => 1000,
+                'coolFactor' => 5,
+                'owner' => '/api/users/'.$user->getId(),
+            ]))
             ->assertStatus(201)
             ->dump()
             ->assertJsonMatches('name', 'A shiny thing')
