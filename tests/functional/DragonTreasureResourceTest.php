@@ -11,10 +11,10 @@ use Zenstruck\Browser\Json;
 use Zenstruck\Foundry\Test\ResetDatabase;
 use App\Entity\ApiTokens;
 
-
 class DragonTreasureResourceTest extends FunctionalApiTestCase
 {
     use ResetDatabase;
+
     public function testGetCollectionOfTreasures(): void
     {
         DragonTreasureFactory::createMany(5);
@@ -37,6 +37,7 @@ class DragonTreasureResourceTest extends FunctionalApiTestCase
             'plunderedAtAgo',
         ]);
     }
+
     public function testPostToCreateTreasure(): void
     {
         $user = UserFactory::createOne();
@@ -57,6 +58,7 @@ class DragonTreasureResourceTest extends FunctionalApiTestCase
             ->assertJsonMatches('name', 'A shiny thing')
         ;
     }
+
     public function testPostToCreateTreasureWithApiKey(): void
     {
         $token = ApiTokensFactory::createOne([
@@ -72,6 +74,7 @@ class DragonTreasureResourceTest extends FunctionalApiTestCase
             ->assertStatus(422)
         ;
     }
+
     public function testPostToCreateTreasureDeniedWithoutScope(): void
     {
         $token = ApiTokensFactory::createOne([
@@ -83,6 +86,44 @@ class DragonTreasureResourceTest extends FunctionalApiTestCase
                 'headers' => [
                     'Authorization' => 'Bearer '.$token->getToken()
                 ]
+            ])
+            ->assertStatus(403)
+        ;
+    }
+
+    public function testPatchToUpdateTreasure()
+    {
+        $user = UserFactory::createOne();
+        $treasure = DragonTreasureFactory::createOne(['owner' => $user]);
+        $this->browser()
+            ->actingAs($user)
+            ->patch('/api/treasures/'.$treasure->getId(), [
+                'json' => [
+                    'value' => 12345,
+                ],
+            ])
+            ->assertStatus(200)
+            ->assertJsonMatches('value', 12345)
+        ;
+        $user2 = UserFactory::createOne();
+        $this->browser()
+            ->actingAs($user2)
+            ->patch('/api/treasures/'.$treasure->getId(), [
+                'json' => [
+                    'value' => 6789,
+                    // be tricky and try to change the owner
+                    'owner' => '/api/users/'.$user2->getId(),
+                ],
+            ])
+            ->assertStatus(403)
+        ;
+        $this->browser()
+            ->actingAs($user)
+            ->patch('/api/treasures/'.$treasure->getId(), [
+                'json' => [
+                    // change the owner to someone else
+                    'owner' => '/api/users/'.$user2->getId(),
+                ],
             ])
             ->assertStatus(403)
         ;
