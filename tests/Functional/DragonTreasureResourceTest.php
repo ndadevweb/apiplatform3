@@ -127,7 +127,7 @@ class DragonTreasureResourceTest extends FunctionalApiTestCase
                     'owner' => '/api/users/'.$user2->getId(),
                 ],
             ])
-            ->assertStatus(403)
+            ->assertStatus(422)
         ;
     }
 
