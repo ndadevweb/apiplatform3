@@ -126,7 +126,7 @@ class DragonTreasure
 
     #[ORM\Column(nullable: false)]
     #[ApiFilter(BooleanFilter::class)]
-    #[Groups(['treasure:read', 'treasure:write'])]
+    #[Groups(['admin:read', 'admin:write'])]
     #[ApiProperty(
         security: 'is_granted("EDIT", object)'
     )]
