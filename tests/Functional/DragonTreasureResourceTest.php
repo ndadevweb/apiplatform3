@@ -5,7 +5,7 @@ namespace App\Tests\Functional;
 use App\Factory\DragonTreasureFactory;
 use App\Factory\UserFactory;
 use App\Factory\ApiTokensFactory;
-use App\Tests\ApiTestCase as FunctionalApiTestCase;
+use App\Tests\Functional\ApiTestCase as FunctionalApiTestCase;
 use Zenstruck\Browser\HttpOptions;
 use Zenstruck\Browser\Json;
 use Zenstruck\Foundry\Test\ResetDatabase;
