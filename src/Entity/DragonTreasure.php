@@ -282,7 +282,7 @@ class DragonTreasure
             throw new \LogicException('You must call setIsOwnedByAuthenticatedUser() before isOwnedByAuthenticatedUser()');
         }
     
-        return $this->isOwnedByAuthenticatedUser();
+        return $this->isOwnedByAuthenticatedUser;
     }
 
     public function setIsOwnedByAuthenticatedUser(bool $isOwnedByAuthenticatedUser)

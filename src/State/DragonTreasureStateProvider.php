@@ -2,6 +2,8 @@
 
 namespace App\State;
 
+use ApiPlatform\Doctrine\Orm\State\CollectionProvider;
+use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Doctrine\Orm\State\ItemProvider;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
@@ -13,6 +15,7 @@ class DragonTreasureStateProvider implements ProviderInterface
 {
     public function __construct(
         #[Autowire(service: ItemProvider::class)] private ProviderInterface $itemProvider,
+        #[Autowire(service: CollectionProvider::class)] private ProviderInterface $collectionProvider,
         private Security $security,
     )
     {
@@ -20,6 +23,17 @@ class DragonTreasureStateProvider implements ProviderInterface
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
+        if ($operation instanceof CollectionOperationInterface) {
+            /** @var $paginator iterable<DragonTreasure> */
+            $paginator = $this->collectionProvider->provide($operation, $uriVariables, $context);
+
+            foreach ($paginator as $treasure) {
+                $treasure->setIsOwnedByAuthenticatedUser($this->security->getUser() === $treasure->getOwner());
+            }
+
+            return $paginator;
+        }
+
         $treasure = $this->itemProvider->provide($operation, $uriVariables, $context);
 
         if (!$treasure instanceof DragonTreasure) {
@@ -27,7 +41,7 @@ class DragonTreasureStateProvider implements ProviderInterface
         }
 
         $treasure->setIsOwnedByAuthenticatedUser($this->security->getUser() === $treasure->getOwner());
-
+        
         return $treasure;
     }
 }

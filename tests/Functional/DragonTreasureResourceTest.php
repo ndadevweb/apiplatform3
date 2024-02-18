@@ -33,6 +33,7 @@ class DragonTreasureResourceTest extends FunctionalApiTestCase
             ->assertJsonMatches('length("hydra:member")', 5)
             ->json()
         ;
+
         $this->assertSame(array_keys($json->decoded()['hydra:member'][0]), [
             '@id',
             '@type',
@@ -43,6 +44,7 @@ class DragonTreasureResourceTest extends FunctionalApiTestCase
             'owner',
             'shortDescription',
             'plunderedAtAgo',
+            'isMine'
         ]);
     }
 
