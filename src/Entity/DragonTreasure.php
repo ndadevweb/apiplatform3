@@ -17,6 +17,7 @@ use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Serializer\Filter\PropertyFilter;
 use App\Repository\DragonTreasureRepository;
+use App\State\DragonTreasureStateProvider;
 use App\Validator\IsValidOwner;
 use Carbon\Carbon;
 use Doctrine\DBAL\Types\Types;
@@ -68,6 +69,7 @@ use function Symfony\Component\String\u;
         'groups' => ['treasure:write'],
     ],
     paginationItemsPerPage: 10,
+    provider: DragonTreasureStateProvider::class
 )]
 #[ApiResource(
     uriTemplate: '/users/{user_id}/treasures.{_format}',
@@ -82,6 +84,7 @@ use function Symfony\Component\String\u;
     normalizationContext: [
         'groups' => ['treasure:read'],
     ],
+    provider: DragonTreasureStateProvider::class
 )]
 #[ApiFilter(PropertyFilter::class)]
 #[ApiFilter(SearchFilter::class, properties: [
