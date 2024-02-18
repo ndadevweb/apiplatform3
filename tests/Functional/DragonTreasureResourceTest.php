@@ -10,6 +10,7 @@ use Zenstruck\Browser\HttpOptions;
 use Zenstruck\Browser\Json;
 use Zenstruck\Foundry\Test\ResetDatabase;
 use App\Entity\ApiTokens;
+use App\Entity\DragonTreasure;
 
 class DragonTreasureResourceTest extends FunctionalApiTestCase
 {
@@ -17,7 +18,14 @@ class DragonTreasureResourceTest extends FunctionalApiTestCase
 
     public function testGetCollectionOfTreasures(): void
     {
-        DragonTreasureFactory::createMany(5);
+        DragonTreasureFactory::createMany(5, [
+            'isPublished' => true
+        ]);
+
+        DragonTreasureFactory::createOne([
+            'isPublished' => false
+        ]);
+
         $json = $this->browser()
             ->get('/api/treasures')
             ->assertJson()
