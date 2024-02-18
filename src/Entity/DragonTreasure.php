@@ -17,6 +17,7 @@ use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Serializer\Filter\PropertyFilter;
 use App\Repository\DragonTreasureRepository;
+use App\State\DragonTreasureStateProcessor;
 use App\State\DragonTreasureStateProvider;
 use App\Validator\IsValidOwner;
 use Carbon\Carbon;
@@ -39,7 +40,8 @@ use function Symfony\Component\String\u;
         ),
         new GetCollection(),
         new Post(
-            security: 'is_granted("ROLE_TREASURE_CREATE")'
+            security: 'is_granted("ROLE_TREASURE_CREATE")',
+            processor: DragonTreasureStateProcessor::class
         ),
         new Put(
             security: 'is_granted("ROLE_TREASURE_EDIT")'
@@ -49,6 +51,7 @@ use function Symfony\Component\String\u;
             // securityPostDenormalize: 'is_granted("ROLE_ADMIN") or object.getOwner() == user'
             security: 'is_granted("EDIT", object)',
             // securityPostDenormalize: 'is_granted("EDIT", object)'
+            processor: DragonTreasureStateProcessor::class
         ),
         new Delete(
             security: 'is_granted("ROLE_ADMIN")'
@@ -130,7 +133,7 @@ class DragonTreasure
 
     #[ORM\Column(nullable: false)]
     #[ApiFilter(BooleanFilter::class)]
-    #[Groups(['admin:read', 'admin:write', 'owner:read'])]
+    #[Groups(['admin:read', 'admin:write', 'owner:read', 'treasure:write'])]
     #[ApiProperty(
         security: 'is_granted("EDIT", object)'
     )]
