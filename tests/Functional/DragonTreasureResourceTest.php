@@ -46,6 +46,18 @@ class DragonTreasureResourceTest extends FunctionalApiTestCase
         ]);
     }
 
+    public function testGetOneUnpublishedTreasure404s(): void
+    {
+        $dragonTreasure = DragonTreasureFactory::createOne([
+            'isPublished' => false
+        ]);
+
+        $this->browser()
+            ->get('/api/treasures/'.$dragonTreasure->getId())
+            ->assertStatus(404)
+        ;
+    }
+
     public function testPostToCreateTreasure(): void
     {
         $user = UserFactory::createOne();
@@ -138,11 +150,31 @@ class DragonTreasureResourceTest extends FunctionalApiTestCase
         ;
     }
 
+    public function testPatchUnpublishedWorks()
+    {
+        $user = UserFactory::createOne();
+        $treasure = DragonTreasureFactory::createOne([
+            'owner' => $user,
+            'isPublished' => false
+        ]);
+    
+        $this->browser()
+            ->actingAs($user)
+            ->patch('/api/treasures/'.$treasure->getId(), [
+                'json' => [
+                    'value' => 12345,
+                ],
+            ])
+            ->assertStatus(200)
+            ->assertJsonMatches('value', 12345)
+        ;
+    }
+
     public function testAdminCanPatchToEditTreasure(): void
     {
         $admin = UserFactory::new()->asAdmin()->create();
         $treasure = DragonTreasureFactory::createOne([
-            'isPublished' => false,
+            'isPublished' => true,
         ]);
 
         $this->browser()
@@ -154,7 +186,7 @@ class DragonTreasureResourceTest extends FunctionalApiTestCase
             ])
             ->assertStatus(200)
             ->assertJsonMatches('value', 12345)
-            ->assertJsonMatches('isPublished', false)
+            ->assertJsonMatches('isPublished', true)
         ;
     }
 
@@ -162,7 +194,7 @@ class DragonTreasureResourceTest extends FunctionalApiTestCase
     {
         $user = UserFactory::new()->create();
         $treasure = DragonTreasureFactory::createOne([
-            'isPublished' => false,
+            'isPublished' => true,
             'owner' => $user,
         ]);
 
@@ -175,7 +207,7 @@ class DragonTreasureResourceTest extends FunctionalApiTestCase
             ])
             ->assertStatus(200)
             ->assertJsonMatches('value', 12345)
-            ->assertJsonMatches('isPublished', false)
+            ->assertJsonMatches('isPublished', true)
             ->assertJsonMatches('isMine', true)
         ;
     }
