@@ -141,6 +141,12 @@ class DragonTreasure
     #[ApiFilter(SearchFilter::class, strategy: 'exact')]
     private ?User $owner = null;
 
+    /**
+     * @var bool non-persisted property to help determine if this treasure is
+     * owned by the authenticated user
+     */
+    private bool $isOwnedByAuthenticatedUser;
+
     public function __construct(string $name = null)
     {
         $this->name = $name;
@@ -263,5 +269,21 @@ class DragonTreasure
     public function isIsPublished(): ?bool
     {
         return $this->isPublished;
+    }
+
+    #[Groups(['treasure:read'])]
+    #[SerializedName('isMine')]
+    public function isOwnedByAuthenticatedUser(): bool
+    {
+        if(isset($this->isOwnedByAuthenticatedUser) === false) {
+            throw new \LogicException('You must call setIsOwnedByAuthenticatedUser() before isOwnedByAuthenticatedUser()');
+        }
+    
+        return $this->isOwnedByAuthenticatedUser();
+    }
+
+    public function setIsOwnedByAuthenticatedUser(bool $isOwnedByAuthenticatedUser)
+    {
+        $this->isOwnedByAuthenticatedUser = $isOwnedByAuthenticatedUser;
     }
 }

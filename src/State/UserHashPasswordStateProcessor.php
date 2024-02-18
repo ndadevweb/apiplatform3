@@ -25,7 +25,7 @@ class UserHashPasswordStateProcessor implements ProcessorInterface
                 $data,
                 $data->getPlainPassword()
             ));
-            $data->eraseCredentials();
+            // $data->eraseCredentials();
         }
 
         return $this->innerProcessor->process($data, $operation, $uriVariables, $context);

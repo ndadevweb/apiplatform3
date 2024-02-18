@@ -24,13 +24,16 @@ class AddOwnerGroupsNormalizer implements NormalizerInterface, SerializerAwareIn
             $context['groups'][] = 'owner:read';
         }
 
-        $normalized = $this->normalizer->normalize($object, $format, $context);
+        return $this->normalizer->normalize($object, $format, $context);
+        // Part 2 - It's possible to create a custom field in Normalizer class
+        // but it's recommand to add this field in the DragonTreasure entity class
+        // $normalized = $this->normalizer->normalize($object, $format, $context);
+        //
+        // if($object instanceof DragonTreasure && $this->security->getUser() === $object->getOwner()) {
+        //     $normalized['isMine'] = true;
+        // }
 
-        if($object instanceof DragonTreasure && $this->security->getUser() === $object->getOwner()) {
-            $normalized['isMine'] = true;
-        }
-
-        return $normalized;
+        // return $normalized;
     }
 
     public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
