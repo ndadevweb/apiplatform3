@@ -6,6 +6,7 @@ use ApiPlatform\Doctrine\Common\State\PersistProcessor;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\DragonTreasure;
+use App\Entity\Notification;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
@@ -42,12 +43,11 @@ class DragonTreasureStateProcessor implements ProcessorInterface
             && $data->getIsPublished()
             && $data->getIsPublished() !== $previousData->getIsPublished()
         ) {
-            // I don't have this class because I started this course with symfony 6.2 not 6.3 like in the part 3... f**kssssssssssssssss
-            // $notification = new Notification();
-            // $notification->setDragonTreasure($data);
-            // $notification->setMessage('Treasure has been published!');
-            // $this->entityManager->persist($notification);
-            // $this->entityManager->flush();
+            $notification = new Notification();
+            $notification->setDragonTreasure($data);
+            $notification->setMessage('Treasure has been published!');
+            $this->entityManager->persist($notification);
+            $this->entityManager->flush();
         }
 
         return $data;
