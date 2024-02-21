@@ -39,6 +39,11 @@ class DailyQuest
 
     public \DateTimeInterface $lastUpdated;
 
+    /**
+     * @var array DragonTreasure[]
+     */
+    public array $treasures;
+
     public function __construct(\DateTimeInterface $day)
     {
         $this->day = $day;
