@@ -31,4 +31,6 @@ class UserApi
      * @var array<int, \App\Entity\DragonTreasure>
      */
     public array $dragonTreasures = [];
+
+    public int $flameThrowingDistance = 0;
 }
