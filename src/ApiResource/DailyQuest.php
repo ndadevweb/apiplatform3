@@ -21,6 +21,7 @@ use Symfony\Component\Serializer\Annotation\Ignore;
             
         )
     ],
+    paginationItemsPerPage: 10,
     provider: DailyQuestStateProvider::class,
     processor: DailyQuestStateProcessor::class
 )]
