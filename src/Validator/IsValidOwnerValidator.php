@@ -2,6 +2,7 @@
 
 namespace App\Validator;
 
+use App\ApiResource\UserApi;
 use App\Entity\User;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Validator\Constraint;
@@ -20,7 +21,7 @@ class IsValidOwnerValidator extends ConstraintValidator
             return;
         }
 
-        assert($value instanceof User);
+        assert($value instanceof UserApi);
 
         $user = $this->security->getUser();
 
@@ -32,7 +33,9 @@ class IsValidOwnerValidator extends ConstraintValidator
             return;
         }
 
-        if($value !== $user) {
+        assert($user instanceof User);
+
+        if($value->id !== $user->getId()) {
             $this->context->buildViolation($constraint->message)
             ->addViolation();
         }

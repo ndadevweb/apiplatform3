@@ -122,6 +122,7 @@ class DragonTreasureResourceTest extends FunctionalApiTestCase
                 'json' => [
                     'value' => 12345,
                 ],
+                'headers' => ['Content-Type' => 'application/merge-patch+json']
             ])
             ->assertStatus(200)
             ->assertJsonMatches('value', 12345)
@@ -136,6 +137,7 @@ class DragonTreasureResourceTest extends FunctionalApiTestCase
                     // be tricky and try to change the owner
                     'owner' => '/api/users/'.$user2->getId(),
                 ],
+                'headers' => ['Content-Type' => 'application/merge-patch+json']
             ])
             ->assertStatus(403)
         ;
@@ -147,6 +149,7 @@ class DragonTreasureResourceTest extends FunctionalApiTestCase
                     // change the owner to someone else
                     'owner' => '/api/users/'.$user2->getId(),
                 ],
+                'headers' => ['Content-Type' => 'application/merge-patch+json']
             ])
             ->assertStatus(422)
         ;
@@ -166,6 +169,7 @@ class DragonTreasureResourceTest extends FunctionalApiTestCase
                 'json' => [
                     'value' => 12345,
                 ],
+                'headers' => ['Content-Type' => 'application/merge-patch+json']
             ])
             ->assertStatus(200)
             ->assertJsonMatches('value', 12345)
@@ -185,6 +189,7 @@ class DragonTreasureResourceTest extends FunctionalApiTestCase
                 'json' => [
                     'value' => 12345,
                 ],
+                'headers' => ['Content-Type' => 'application/merge-patch+json']
             ])
             ->assertStatus(200)
             ->assertJsonMatches('value', 12345)
@@ -206,6 +211,7 @@ class DragonTreasureResourceTest extends FunctionalApiTestCase
                 'json' => [
                     'value' => 12345,
                 ],
+                'headers' => ['Content-Type' => 'application/merge-patch+json']
             ])
             ->assertStatus(200)
             ->assertJsonMatches('value', 12345)
@@ -228,6 +234,7 @@ class DragonTreasureResourceTest extends FunctionalApiTestCase
                 'json' => [
                     'isPublished' => true,
                 ],
+                'headers' => ['Content-Type' => 'application/merge-patch+json']
             ])
             ->assertStatus(200)
             ->assertJsonMatches('isPublished', true)
