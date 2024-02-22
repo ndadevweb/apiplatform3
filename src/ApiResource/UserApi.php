@@ -3,7 +3,6 @@
 namespace App\ApiResource;
 
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Doctrine\Orm\State\CollectionProvider;
 use ApiPlatform\Doctrine\Orm\State\Options;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
@@ -17,14 +16,14 @@ use App\State\EntityToDtoStateProvider;
     paginationItemsPerPage: 5,
     provider: EntityToDtoStateProvider::class,
     processor: EntityClassDtoStateProcessor::class,
-    stateOptions: new Options(entityClass: User::class)
+    stateOptions: new Options(entityClass: User::class),
 )]
 #[ApiFilter(SearchFilter::class, properties: [
     'username' => 'partial'
 ])]
 class UserApi
 {
-    #[ApiProperty(readable: false, identifier: true)]
+    #[ApiProperty(readable: false, writable: false, identifier: true)]
     public ?int $id = null;
 
     public ?string $email = null;
@@ -40,7 +39,9 @@ class UserApi
     /**
      * @var array<int, \App\Entity\DragonTreasure>
      */
+    #[ApiProperty(writable: false)]
     public array $dragonTreasures = [];
 
+    #[ApiProperty(writable: false)]
     public int $flameThrowingDistance = 0;
 }
