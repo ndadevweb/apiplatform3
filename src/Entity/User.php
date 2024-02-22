@@ -64,8 +64,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 //     ]
 // )]
 // #[ApiFilter(PropertyFilter::class)]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-#[UniqueEntity(fields: ['username'], message: 'It looks like another dragon took your username. ROAR!')]
+// #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+// #[UniqueEntity(fields: ['username'], message: 'It looks like another dragon took your username. ROAR!')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
