@@ -8,6 +8,7 @@ use App\Entity\DragonTreasure;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfonycasts\MicroMapper\AsMapper;
 use Symfonycasts\MicroMapper\MapperInterface;
+use Symfonycasts\MicroMapper\MicroMapper;
 use Symfonycasts\MicroMapper\MicroMapperInterface;
 
 #[AsMapper(from: DragonTreasure::class, to: DragonTreasureApi::class)]
@@ -41,7 +42,9 @@ class DragonTreasureEntityToApiMapper implements MapperInterface
 
         $dto->name = $entity->getName();
         $dto->owner = $entity->getOwner()
-            ? $this->microMapper->map($entity->getOwner(), UserApi::class)
+            ? $this->microMapper->map($entity->getOwner(), UserApi::class, [
+                MicroMapperInterface::MAX_DEPTH => 0
+            ])
             : null;
         $dto->description = $entity->getDescription();
         $dto->value = $entity->getValue();
