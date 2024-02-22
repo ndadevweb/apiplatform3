@@ -29,70 +29,70 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 use function Symfony\Component\String\u;
 
 #[ORM\Entity(repositoryClass: DragonTreasureRepository::class)]
-#[ApiResource(
-    shortName: 'Treasure',
-    description: 'A rare and valuable treasure.',
-    operations: [
-        new Get(
-            normalizationContext: [
-                'groups' => ['treasure:read', 'treasure:item:get'],
-            ],
-        ),
-        new GetCollection(),
-        new Post(
-            security: 'is_granted("ROLE_TREASURE_CREATE")',
-            processor: DragonTreasureStateProcessor::class
-        ),
-        new Put(
-            security: 'is_granted("ROLE_TREASURE_EDIT")'
-        ),
-        new Patch(
-            // security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_TREASURE_EDIT") and object.getOwner() == user',
-            // securityPostDenormalize: 'is_granted("ROLE_ADMIN") or object.getOwner() == user'
-            security: 'is_granted("EDIT", object)',
-            // securityPostDenormalize: 'is_granted("EDIT", object)'
-            processor: DragonTreasureStateProcessor::class
-        ),
-        new Delete(
-            security: 'is_granted("ROLE_ADMIN")'
-        )
-    ],
-    formats: [
-        'jsonld',
-        'json',
-        // html doit etre desactive en prod
-        // 'html',
-        'jsonhal',
-        'csv' => 'text/csv',
-    ],
-    normalizationContext: [
-        'groups' => ['treasure:read'],
-    ],
-    denormalizationContext: [
-        'groups' => ['treasure:write'],
-    ],
-    paginationItemsPerPage: 10,
-    provider: DragonTreasureStateProvider::class
-)]
-#[ApiResource(
-    uriTemplate: '/users/{user_id}/treasures.{_format}',
-    shortName: 'Treasure',
-    operations: [new GetCollection()],
-    uriVariables: [
-        'user_id' => new Link(
-            fromProperty: 'dragonTreasures',
-            fromClass: User::class,
-        ),
-    ],
-    normalizationContext: [
-        'groups' => ['treasure:read'],
-    ],
-    provider: DragonTreasureStateProvider::class
-)]
-#[ApiFilter(PropertyFilter::class)]
-#[ApiFilter(SearchFilter::class, properties: [
-    'owner.username' => 'partial',
-])]
+// #[ApiResource(
+//     shortName: 'Treasure',
+//     description: 'A rare and valuable treasure.',
+//     operations: [
+//         new Get(
+//             normalizationContext: [
+//                 'groups' => ['treasure:read', 'treasure:item:get'],
+//             ],
+//         ),
+//         new GetCollection(),
+//         new Post(
+//             security: 'is_granted("ROLE_TREASURE_CREATE")',
+//             processor: DragonTreasureStateProcessor::class
+//         ),
+//         new Put(
+//             security: 'is_granted("ROLE_TREASURE_EDIT")'
+//         ),
+//         new Patch(
+//             // security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_TREASURE_EDIT") and object.getOwner() == user',
+//             // securityPostDenormalize: 'is_granted("ROLE_ADMIN") or object.getOwner() == user'
+//             security: 'is_granted("EDIT", object)',
+//             // securityPostDenormalize: 'is_granted("EDIT", object)'
+//             processor: DragonTreasureStateProcessor::class
+//         ),
+//         new Delete(
+//             security: 'is_granted("ROLE_ADMIN")'
+//         )
+//     ],
+//     formats: [
+//         'jsonld',
+//         'json',
+//         // html doit etre desactive en prod
+//         // 'html',
+//         'jsonhal',
+//         'csv' => 'text/csv',
+//     ],
+//     normalizationContext: [
+//         'groups' => ['treasure:read'],
+//     ],
+//     denormalizationContext: [
+//         'groups' => ['treasure:write'],
+//     ],
+//     paginationItemsPerPage: 10,
+//     provider: DragonTreasureStateProvider::class
+// )]
+// #[ApiResource(
+//     uriTemplate: '/users/{user_id}/treasures.{_format}',
+//     shortName: 'Treasure',
+//     operations: [new GetCollection()],
+//     uriVariables: [
+//         'user_id' => new Link(
+//             fromProperty: 'dragonTreasures',
+//             fromClass: User::class,
+//         ),
+//     ],
+//     normalizationContext: [
+//         'groups' => ['treasure:read'],
+//     ],
+//     provider: DragonTreasureStateProvider::class
+// )]
+// #[ApiFilter(PropertyFilter::class)]
+// #[ApiFilter(SearchFilter::class, properties: [
+//     'owner.username' => 'partial',
+// ])]
 class DragonTreasure
 {
     #[ORM\Id]
@@ -101,50 +101,50 @@ class DragonTreasure
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['treasure:read', 'treasure:write', 'user:read', 'user:write'])]
-    #[ApiFilter(SearchFilter::class, strategy: 'partial')]
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 2, max: 50, maxMessage: 'Describe your loot in 50 chars or less')]
+    // #[Groups(['treasure:read', 'treasure:write', 'user:read', 'user:write'])]
+    // #[ApiFilter(SearchFilter::class, strategy: 'partial')]
+    // #[Assert\NotBlank]
+    // #[Assert\Length(min: 2, max: 50, maxMessage: 'Describe your loot in 50 chars or less')]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['treasure:read'])]
-    #[ApiFilter(SearchFilter::class, strategy: 'partial')]
-    #[Assert\NotBlank]
+    // #[Groups(['treasure:read'])]
+    // #[ApiFilter(SearchFilter::class, strategy: 'partial')]
+    // #[Assert\NotBlank]
     private ?string $description = null;
 
     /**
      * The estimated value of this treasure, in gold coins.
      */
     #[ORM\Column]
-    #[Groups(['treasure:read', 'treasure:write', 'user:read', 'user:write'])]
-    #[ApiFilter(RangeFilter::class)]
-    #[Assert\GreaterThanOrEqual(0)]
+    // #[Groups(['treasure:read', 'treasure:write', 'user:read', 'user:write'])]
+    // #[ApiFilter(RangeFilter::class)]
+    // #[Assert\GreaterThanOrEqual(0)]
     private ?int $value = 0;
 
     #[ORM\Column]
-    #[Groups(['treasure:read', 'treasure:write'])]
-    #[Assert\GreaterThanOrEqual(0)]
-    #[Assert\LessThanOrEqual(10)]
+    // #[Groups(['treasure:read', 'treasure:write'])]
+    // #[Assert\GreaterThanOrEqual(0)]
+    // #[Assert\LessThanOrEqual(10)]
     private ?int $coolFactor = 0;
 
     #[ORM\Column]
     private \DateTimeImmutable $plunderedAt;
 
     #[ORM\Column(nullable: false)]
-    #[ApiFilter(BooleanFilter::class)]
-    #[Groups(['admin:read', 'admin:write', 'owner:read', 'treasure:write'])]
-    #[ApiProperty(
-        security: 'is_granted("EDIT", object)'
-    )]
+    // #[ApiFilter(BooleanFilter::class)]
+    // #[Groups(['admin:read', 'admin:write', 'owner:read', 'treasure:write'])]
+    // #[ApiProperty(
+    //     security: 'is_granted("EDIT", object)'
+    // )]
     private bool $isPublished = false;
 
     #[ORM\ManyToOne(inversedBy: 'dragonTreasures')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['treasure:read', 'treasure:write'])]
-    #[Assert\Valid]
-    #[IsValidOwner()]
-    #[ApiFilter(SearchFilter::class, strategy: 'exact')]
+    // #[Groups(['treasure:read', 'treasure:write'])]
+    // #[Assert\Valid]
+    // #[IsValidOwner()]
+    // #[ApiFilter(SearchFilter::class, strategy: 'exact')]
     private ?User $owner = null;
 
     /**
@@ -174,7 +174,7 @@ class DragonTreasure
         return $this->description;
     }
 
-    #[Groups(['treasure:read'])]
+    // #[Groups(['treasure:read'])]
     public function getShortDescription(): string
     {
         return u($this->getDescription())->truncate(40, '...');
@@ -187,8 +187,8 @@ class DragonTreasure
         return $this;
     }
 
-    #[SerializedName('description')]
-    #[Groups(['treasure:write', 'user:write'])]
+    // #[SerializedName('description')]
+    // #[Groups(['treasure:write', 'user:write'])]
     public function setTextDescription(string $description): self
     {
         $this->description = nl2br($description);
@@ -235,7 +235,7 @@ class DragonTreasure
     /**
      * A human-readable representation of when this treasure was plundered.
      */
-    #[Groups(['treasure:read'])]
+    // #[Groups(['treasure:read'])]
     public function getPlunderedAtAgo(): string
     {
         return Carbon::instance($this->plunderedAt)->diffForHumans();
@@ -277,8 +277,8 @@ class DragonTreasure
         return $this->isPublished;
     }
 
-    #[Groups(['treasure:read'])]
-    #[SerializedName('isMine')]
+    // #[Groups(['treasure:read'])]
+    // #[SerializedName('isMine')]
     public function isOwnedByAuthenticatedUser(): bool
     {
         if(isset($this->isOwnedByAuthenticatedUser) === false) {
