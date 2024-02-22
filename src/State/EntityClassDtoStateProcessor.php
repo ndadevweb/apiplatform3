@@ -12,6 +12,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfonycasts\MicroMapper\MicroMapperInterface;
 
 class EntityClassDtoStateProcessor implements ProcessorInterface
 {
@@ -19,7 +20,8 @@ class EntityClassDtoStateProcessor implements ProcessorInterface
         private UserRepository $userRepository,
         #[Autowire(service: PersistProcessor::class)] private ProcessorInterface $persistProcessor,
         #[Autowire(service: RemoveProcessor::class)] private ProcessorInterface $removeProcessor,
-        private UserPasswordHasherInterface $userPasswordHasher
+        private UserPasswordHasherInterface $userPasswordHasher,
+        private MicroMapperInterface $microMapper
     )
     {
 
@@ -28,10 +30,10 @@ class EntityClassDtoStateProcessor implements ProcessorInterface
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
     {
         assert($data instanceof UserApi);
-    
+
         $entity = $this->mapDtoToEntity($data);
 
-        if($operation instanceof DeleteOperationInterface) {
+        if ($operation instanceof DeleteOperationInterface) {
             $this->removeProcessor->process($entity, $operation, $uriVariables, $context);
 
             return null;
@@ -45,27 +47,6 @@ class EntityClassDtoStateProcessor implements ProcessorInterface
 
     private function mapDtoToEntity(object $dto): object
     {
-        assert($dto instanceof UserApi);
-
-        if($dto->id) {
-            $entity = $this->userRepository->find($dto->id);
-
-            if(!$entity) {
-                throw new \Exception(sprintf('Entity %d not found', $dto->id));
-            }
-        } else {
-            $entity = new User();
-        }
-
-        $entity->setEmail($dto->email);
-        $entity->setUsername($dto->username);
-        $entity->setPassword('TODO properly');
-
-        if($dto->password) {
-            $entity->setPassword($this->userPasswordHasher->hashPassword($entity, $dto->password));
-        }
-        // todo dandle dragon treasure
-
-        return $entity;
+        return $this->microMapper->map($dto, User::class);
     }
 }
