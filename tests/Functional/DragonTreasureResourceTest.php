@@ -60,7 +60,7 @@ class DragonTreasureResourceTest extends FunctionalApiTestCase
         ;
     }
 
-    public function testPostToCreateTreasure(): void
+    public function testPostToCreateTreasureWithLogin(): void
     {
         $user = UserFactory::createOne();
         $this->browser()
