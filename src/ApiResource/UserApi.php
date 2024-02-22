@@ -6,6 +6,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Doctrine\Orm\State\CollectionProvider;
 use ApiPlatform\Doctrine\Orm\State\Options;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use App\Entity\User;
 use App\State\EntityClassDtoStateProcessor;
@@ -23,6 +24,7 @@ use App\State\EntityToDtoStateProvider;
 ])]
 class UserApi
 {
+    #[ApiProperty(readable: false, identifier: true)]
     public ?int $id = null;
 
     public ?string $email = null;
@@ -32,6 +34,7 @@ class UserApi
     /**
      * The plaintext password when being set or changed.
      */
+    #[ApiProperty(readable: false)]
     public ?string $password = null;
 
     /**
