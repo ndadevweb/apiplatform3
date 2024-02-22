@@ -41,6 +41,7 @@ class DragonTreasureEntityToApiMapper implements MapperInterface
         assert($dto instanceof DragonTreasureApi);
 
         $dto->name = $entity->getName();
+        $dto->isPublished = $entity->getIsPublished();
         $dto->owner = $entity->getOwner()
             ? $this->microMapper->map($entity->getOwner(), UserApi::class, [
                 MicroMapperInterface::MAX_DEPTH => 0
