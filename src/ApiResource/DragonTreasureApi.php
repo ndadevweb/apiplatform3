@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Delete;
 use App\Entity\DragonTreasure;
+use App\State\DragonTreasureStateProcessor;
 use App\State\EntityClassDtoStateProcessor;
 use App\State\EntityToDtoStateProvider;
 use App\Validator\IsValidOwner;
@@ -37,7 +38,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
     ],
     paginationItemsPerPage: 10,
     provider: EntityToDtoStateProvider::class,
-    processor: EntityClassDtoStateProcessor::class,
+    // processor: EntityClassDtoStateProcessor::class,
+    processor: DragonTreasureStateProcessor::class,
     stateOptions: new Options(entityClass: DragonTreasure::class),
 )]
 #[ApiFilter(SearchFilter::class, properties: [
