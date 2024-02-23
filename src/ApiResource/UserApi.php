@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\{Get, GetCollection, Post, Patch, Delete};
 use App\Entity\User;
 use App\State\EntityClassDtoStateProcessor;
 use App\State\EntityToDtoStateProvider;
+use App\Validator\TreasuresAllowedOwnerChange;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -37,6 +38,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[ApiFilter(SearchFilter::class, properties: [
     'username' => 'partial'
 ])]
+#[TreasuresAllowedOwnerChange()]
 class UserApi
 {
     #[ApiProperty(readable: false, writable: false, identifier: true)]
@@ -59,7 +61,6 @@ class UserApi
     /**
      * @var array<int, DragonTreasureApi>
      */
-    #[ApiProperty()]
     public array $dragonTreasures = [];
 
     #[ApiProperty(writable: false)]
