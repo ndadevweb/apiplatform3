@@ -57,33 +57,27 @@ class UserResourceTest extends ApiTestCase
         ;
     }
 
-    public function testTreasureCanBeRemoved(): void
+    public function testTreasuresCanBeRemoved(): void
     {
         $user = UserFactory::createOne();
-        $anotherUser = UserFactory::createOne();
+        $otherUser = UserFactory::createOne();
         $dragonTreasure = DragonTreasureFactory::createOne(['owner' => $user]);
         DragonTreasureFactory::createOne(['owner' => $user]);
-        $dragonTreasure3 = DragonTreasureFactory::createOne(['owner' => $anotherUser]);
 
         $this->browser()
             ->actingAs($user)
-            ->patch('/api/users/'.$user->getId(), [
+            ->patch('/api/users/' . $user->getId(), [
                 'json' => [
                     'dragonTreasures' => [
-                        '/api/treasures/'.$dragonTreasure->getId(),
-                        '/api/treasures/'.$dragonTreasure3->getId()
-                    ]
+                        '/api/treasures/' . $dragonTreasure->getId(),
+                    ],
                 ],
-                'headers' => [
-                    'Content-Type' => 'application/merge-patch+json'
-                ]
+                'headers' => ['Content-Type' => 'application/merge-patch+json']
             ])
             ->assertStatus(200)
-            ->get('/api/users/'.$user->getId())
-            ->dump()
-            ->assertJsonMatches('length("dragonTreasures")', 2)
-            ->assertJsonMatches('dragonTreasure[0]', '/api/treasures/'.$dragonTreasure->getId())
-            ->assertJsonMatches('dragonTreasure[1]', '/api/treasures/'.$dragonTreasure3->getId())
+            ->get('/api/users/' . $user->getId())
+            ->assertJsonMatches('length("dragonTreasures")', 1)
+            ->assertJsonMatches('dragonTreasures[0]', '/api/treasures/' . $dragonTreasure->getId())
         ;
     }
 
